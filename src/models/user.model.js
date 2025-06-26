@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
     about: { type: String, default: "" },
     address: { type: String, default: "" },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
