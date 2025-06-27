@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import User from "../models/user.model.js";
+import Users from "../models/users.model.js";
 
 const register = async (req, res, next) => {
   try {
@@ -7,7 +7,7 @@ const register = async (req, res, next) => {
 
     payload.password = await bcrypt.hash(payload.password, 12);
 
-    const user = new User(payload);
+    const user = new Users(payload);
 
     await user.save();
 
