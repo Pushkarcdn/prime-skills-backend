@@ -1,7 +1,7 @@
 import app from "./app.js";
-import { port } from "./src/configs/env.config.js";
+import { server } from "./src/configs/env.config.js";
 
-app.listen(port, (err) => {
+app.listen(server.port, (err) => {
   if (err) console.log(`Error while starting the server: `, err);
-  else console.log(`Server started at port: `, port);
+  else console.log(`Server started at port: `, server.port);
 });
