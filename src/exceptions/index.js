@@ -1,5 +1,4 @@
 // HttpException: Base class for HTTP exceptions.
-// Use this when you want to create a custom exception with an HTTP status code and message.
 class HttpException extends Error {
   constructor(status, message, source = null) {
     super(message); // Call the base class constructor

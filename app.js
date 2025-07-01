@@ -17,10 +17,9 @@ import { server } from "./src/configs/env.config.js";
 
 import authMiddleware from "./src/middlewares/auth.middleware.js";
 import passportJwtConfig from "./src/passport/jwt.passport.js";
-import { errorResponse, formattedMsg } from "./src/utils/index.js";
-import { errorMsg } from "./src/utils/messages/message.js";
+import { errorResponse } from "./src/utils/index.js";
 import { setIp } from "./src/middlewares/ip.middleware.js";
-import { frontend, database } from "./src/configs/env.config.js";
+import { frontend } from "./src/configs/env.config.js";
 import { limiter } from "./src/configs/server.js";
 
 const app = express();
@@ -117,10 +116,6 @@ app.use((err, req, res, next) => {
     const source = err?.source || `[${method}] ${path}`;
     const stack = err?.stack || "No stack trace available";
 
-    const modifiedMessage = errorMsg[message]
-      ? formattedMsg(err, errorMsg)
-      : message;
-
     console.error(
       `\n[${method}] ${path} >> StatusCode: ${status}, Message: ${message}`,
     );
@@ -129,7 +124,7 @@ app.use((err, req, res, next) => {
       `${"-".repeat(100)} \nStack: ${stack} \n${"-".repeat(100)}\n`,
     );
 
-    errorObj = errorResponse(status, modifiedMessage, source);
+    errorObj = errorResponse(status, message, source);
 
     return res.status(status).send(errorObj); // Send the error response as JSON
   } catch (error) {

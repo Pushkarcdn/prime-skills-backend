@@ -62,9 +62,7 @@ const upload = (req, res, next) => {
 
     upload.any()(req, res, (err) => {
       if (err) {
-        return res
-          .status(400)
-          .json({ message: "File upload failed", error: err });
+        throw new HttpException(400, "File upload failed!", "File Upload");
       }
       if (fileStorage.target === "cloudinary") {
         uploadToCloudinary(req, res).then(() => {
