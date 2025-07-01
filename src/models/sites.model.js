@@ -3,16 +3,26 @@ import mongoose from "mongoose";
 // Sites Schema
 const siteSchema = new mongoose.Schema(
   {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
+      required: true,
+      index: true,
+    },
     recruiterId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Users",
       required: true,
       index: true,
     },
-    project: {
-      type: String,
-      required: true,
-      trim: true,
+    amount: {
+      type: Number,
+      required: false,
+      min: [0, "Amount cannot be negative"],
+    },
+    locationVerified: {
+      type: Boolean,
+      default: false,
     },
     coverLetter: {
       type: String,

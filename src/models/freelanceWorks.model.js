@@ -9,6 +9,12 @@ const freelanceWorkSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: [200, "Job title cannot exceed 200 characters"],
+    },
     slug: {
       type: String,
       required: true,
@@ -21,15 +27,16 @@ const freelanceWorkSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    oldRequirements: {
+    jobRequirements: {
       type: String,
-      required: false,
+      required: true,
       trim: true,
     },
-    basePrice: {
-      type: Number,
+    budgetType: {
+      type: String,
       required: false,
-      min: [0, "Base price cannot be negative"],
+      enum: ["fixed", "hourly", "project-based"],
+      default: "fixed",
     },
     budgetAmount: {
       type: Number,
@@ -63,10 +70,11 @@ const freelanceWorkSchema = new mongoose.Schema(
       min: [1, "Vacancy must be at least 1"],
       default: 1,
     },
-    salary: {
+    urgency: {
       type: String,
       required: false,
-      trim: true,
+      enum: ["low", "medium", "high"],
+      default: "medium",
     },
     deadline: {
       type: Date,

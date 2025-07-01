@@ -9,7 +9,7 @@ const interviewSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
-    data: {
+    date: {
       type: Date,
       required: true,
     },

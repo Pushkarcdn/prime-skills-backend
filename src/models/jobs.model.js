@@ -68,13 +68,25 @@ const jobSchema = new mongoose.Schema(
       required: false,
       trim: true,
     },
+    locationType: {
+      type: String,
+      required: false,
+      enum: ["remote", "on-site", "hybrid"],
+      default: "on-site",
+    },
     vacancy: {
       type: Number,
       required: false,
       min: [1, "Vacancy must be at least 1"],
       default: 1,
     },
-    dueDate: {
+    urgency: {
+      type: String,
+      required: false,
+      enum: ["low", "medium", "high"],
+      default: "medium",
+    },
+    deadline: {
       type: Date,
       required: false,
     },

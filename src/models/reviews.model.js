@@ -3,12 +3,11 @@ import mongoose from "mongoose";
 // Reviews Schema
 const reviewSchema = new mongoose.Schema(
   {
-    buildId: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
       index: true,
-      // This could reference different types of builds (freelance works, projects, etc.)
-      // You might want to add a discriminator or reference field to specify the type
     },
     reviewerId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -44,8 +43,8 @@ const reviewSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Add compound index to prevent duplicate reviews from same reviewer for same build
-reviewSchema.index({ buildId: 1, reviewerId: 1 }, { unique: true });
+// Add compound index to prevent duplicate reviews from same reviewer for same user
+reviewSchema.index({ userId: 1, reviewerId: 1 }, { unique: true });
 
 // Create model
 const Reviews =
