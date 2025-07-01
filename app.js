@@ -17,10 +17,10 @@ import { server } from "./src/configs/env.config.js";
 
 import authMiddleware from "./src/middlewares/auth.middleware.js";
 import passportJwtConfig from "./src/passport/jwt.passport.js";
-import { errorResponse } from "./src/utils/index.js";
+import errorResponse from "./src/utils/responses/errorResponse.js";
 import { setIp } from "./src/middlewares/ip.middleware.js";
 import { frontend } from "./src/configs/env.config.js";
-import { limiter } from "./src/configs/server.js";
+import { limiter } from "./src/configs/server.config.js";
 
 const app = express();
 const router = express.Router();

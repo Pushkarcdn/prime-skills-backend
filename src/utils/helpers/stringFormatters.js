@@ -30,7 +30,7 @@ function slugify({ title, unique = false }) {
   return slug;
 }
 
-function generateRandomPassword() {
+function generateSecurePassword() {
   const chars =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let password = "";
@@ -43,4 +43,4 @@ function generateRandomPassword() {
   return password;
 }
 
-export { formatTitle, slugify, generateRandomPassword };
+export { formatTitle, slugify, generateSecurePassword };
