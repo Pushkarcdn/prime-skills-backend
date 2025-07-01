@@ -3,87 +3,69 @@ import mongoose from "mongoose";
 // Freelance Works Schema
 const freelanceWorkSchema = new mongoose.Schema(
   {
-    recruiterId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+    id: {
+      type: String,
       required: true,
-      index: true,
+    },
+    recruiterId: {
+      type: String,
+      required: true,
     },
     title: {
       type: String,
       required: true,
-      trim: true,
-      maxlength: [200, "Job title cannot exceed 200 characters"],
     },
     slug: {
       type: String,
       required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
     },
     jobDescription: {
       type: String,
       required: true,
-      trim: true,
     },
     jobRequirements: {
       type: String,
       required: true,
-      trim: true,
     },
     budgetType: {
       type: String,
       required: false,
-      enum: ["fixed", "hourly", "project-based"],
-      default: "fixed",
     },
     budgetAmount: {
       type: Number,
-      required: false,
-      min: [0, "Budget amount cannot be negative"],
+      required: true,
     },
-    dueDateApplicable: {
+    isBudgetNegotiable: {
       type: Boolean,
-      default: false,
+      required: false,
     },
     currency: {
       type: String,
       required: false,
-      trim: true,
-      default: "USD",
     },
     level: {
       type: String,
       required: false,
-      enum: ["beginner", "intermediate", "expert"],
-      trim: true,
     },
-    skill: {
+    field: {
       type: String,
       required: false,
-      trim: true,
     },
     vacancy: {
       type: Number,
       required: false,
-      min: [1, "Vacancy must be at least 1"],
-      default: 1,
     },
     urgency: {
       type: String,
       required: false,
-      enum: ["low", "medium", "high"],
-      default: "medium",
     },
     deadline: {
-      type: Date,
+      type: String,
       required: false,
     },
     isActive: {
       type: Boolean,
-      default: true,
-      index: true,
+      required: false,
     },
   },
   { timestamps: true },

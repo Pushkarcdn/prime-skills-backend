@@ -4,21 +4,20 @@ import mongoose from "mongoose";
 const accessTokenSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      type: String,
       required: true,
-      index: true,
     },
     accessToken: {
       type: String,
       required: true,
-      unique: true,
-      trim: true,
     },
     isActive: {
       type: Boolean,
-      default: true,
-      index: true,
+      required: false,
+    },
+    ip: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true },

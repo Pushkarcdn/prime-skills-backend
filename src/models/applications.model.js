@@ -3,55 +3,37 @@ import mongoose from "mongoose";
 // Applications Schema
 const applicationSchema = new mongoose.Schema(
   {
-    jobId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Jobs",
+    id: {
+      type: String,
       required: true,
-      index: true,
+    },
+    jobId: {
+      type: String,
+      required: true,
     },
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      type: String,
       required: true,
-      index: true,
     },
     cvId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "CVs",
+      type: String,
       required: true,
-      index: true,
     },
     coverLetter: {
       type: String,
       required: false,
-      trim: true,
-      maxlength: [2000, "Cover letter cannot exceed 2000 characters"],
     },
     remarks: {
       type: String,
       required: false,
-      trim: true,
     },
     status: {
       type: String,
-      required: true,
-      enum: [
-        "pending",
-        "reviewing",
-        "shortlisted",
-        "interviewed",
-        "hired",
-        "rejected",
-      ],
-      default: "pending",
-      index: true,
+      required: false,
     },
   },
   { timestamps: true },
 );
-
-// Add compound index to prevent duplicate applications
-applicationSchema.index({ jobId: 1, userId: 1 }, { unique: true });
 
 // Create model
 const Applications =

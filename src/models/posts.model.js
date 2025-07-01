@@ -3,32 +3,25 @@ import mongoose from "mongoose";
 // Posts Schema
 const postSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+    id: {
+      type: String,
       required: true,
-      index: true,
+    },
+    userId: {
+      type: String,
+      required: true,
     },
     content: {
       type: String,
       required: true,
-      trim: true,
-      maxlength: [5000, "Post content cannot exceed 5000 characters"],
     },
-    medias: {
-      type: [String],
-      default: [],
-      validate: {
-        validator: function (arr) {
-          return arr.length <= 10; // Maximum 10 media files per post
-        },
-        message: "Cannot have more than 10 media files per post",
-      },
+    media: {
+      type: String,
+      required: false,
     },
     isActive: {
       type: Boolean,
-      default: true,
-      index: true,
+      required: false,
     },
   },
   { timestamps: true },

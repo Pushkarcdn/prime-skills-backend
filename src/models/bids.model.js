@@ -1,9 +1,13 @@
 import mongoose from "mongoose";
 
-// Certifications Schema
-const certificationSchema = new mongoose.Schema(
+// Bids Schema
+const bidSchema = new mongoose.Schema(
   {
     id: {
+      type: String,
+      required: true,
+    },
+    freelanceWorkId: {
       type: String,
       required: true,
     },
@@ -11,23 +15,19 @@ const certificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    title: {
-      type: String,
+    amount: {
+      type: Number,
       required: true,
     },
-    issuer: {
+    coverLetter: {
       type: String,
       required: false,
     },
-    startDate: {
-      type: String,
-      required: true,
-    },
-    endDate: {
+    remarks: {
       type: String,
       required: false,
     },
-    description: {
+    status: {
       type: String,
       required: false,
     },
@@ -36,8 +36,6 @@ const certificationSchema = new mongoose.Schema(
 );
 
 // Create model
-const Certifications =
-  mongoose.models.Certifications ||
-  mongoose.model("Certifications", certificationSchema);
+const Bids = mongoose.models.Bids || mongoose.model("Bids", bidSchema);
 
-export default Certifications;
+export default Bids;

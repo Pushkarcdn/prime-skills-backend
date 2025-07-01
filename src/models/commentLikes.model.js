@@ -3,29 +3,29 @@ import mongoose from "mongoose";
 // Comments Likes Schema
 const commentLikeSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+    id: {
+      type: String,
       required: true,
-      index: true,
+    },
+    userId: {
+      type: String,
+      required: true,
     },
     commentId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PostComments",
+      type: String,
       required: true,
-      index: true,
+    },
+    reactionType: {
+      type: String,
+      required: true,
     },
     isActive: {
       type: Boolean,
-      default: true,
-      index: true,
+      required: false,
     },
   },
   { timestamps: true },
 );
-
-// Add compound index to prevent duplicate likes
-commentLikeSchema.index({ userId: 1, commentId: 1 }, { unique: true });
 
 // Create model
 const CommentLikes =

@@ -4,45 +4,24 @@ import mongoose from "mongoose";
 const tokenSchema = new mongoose.Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Users",
+      type: String,
       required: true,
-      index: true,
     },
     token: {
       type: String,
       required: true,
-      unique: true,
-      trim: true,
     },
-    type: {
-      type: String,
-      required: true,
-      enum: ["emailVerification", "passwordReset", "phoneVerification"],
-      index: true,
+    isUsed: {
+      type: Boolean,
+      required: false,
     },
     isActive: {
       type: Boolean,
-      default: true,
-      index: true,
+      required: false,
     },
-    ip: {
+    type: {
       type: String,
-      required: true,
-      validate: {
-        validator: function (v) {
-          // Basic IP validation (supports both IPv4 and IPv6)
-          return /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$|^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/.test(
-            v,
-          );
-        },
-        message: "Please enter a valid IP address!",
-      },
-    },
-    expiresAt: {
-      type: Date,
-      required: true,
-      index: { expireAfterSeconds: 0 },
+      required: false,
     },
   },
   { timestamps: true },

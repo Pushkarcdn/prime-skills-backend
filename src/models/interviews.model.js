@@ -3,42 +3,41 @@ import mongoose from "mongoose";
 // Interviews Schema
 const interviewSchema = new mongoose.Schema(
   {
-    applicationId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Applications",
+    id: {
+      type: String,
       required: true,
-      index: true,
+    },
+    applicationId: {
+      type: String,
+      required: true,
     },
     date: {
-      type: Date,
+      type: String,
       required: true,
     },
     time: {
       type: String,
       required: true,
-      trim: true,
     },
     link: {
       type: String,
+      required: true,
+    },
+    meetingPassword: {
+      type: String,
       required: false,
-      trim: true,
     },
     status: {
       type: String,
-      required: true,
-      enum: ["scheduled", "completed", "cancelled", "rescheduled"],
-      default: "scheduled",
-      index: true,
+      required: false,
     },
     messageForApplicant: {
       type: String,
       required: false,
-      trim: true,
     },
-    conclusionOrRejected: {
+    conclusionForRecruiter: {
       type: String,
       required: false,
-      trim: true,
     },
   },
   { timestamps: true },
