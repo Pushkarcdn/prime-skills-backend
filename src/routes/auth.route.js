@@ -1,5 +1,5 @@
+import { registerUser } from "../controllers/auth/auth.controller.js";
+
 export default (router) => {
-  router.get("/", (req, res) => {
-    res.send("This is /api");
-  });
+  router.post("/auth/register", registerUser);
 };

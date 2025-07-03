@@ -25,10 +25,28 @@ const recruiterDetailsSchema = new mongoose.Schema({
 
 const userSchema = new mongoose.Schema(
   {
-    role: { type: String, required: true },
+    role: {
+      type: String,
+      required: true,
+      enum: ["jobSeeker", "recruiter", "admin", "superAdmin"],
+      default: "jobSeeker",
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: [true, "Username already exists!"],
+      lowercase: true,
+      trim: true,
+    },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    email: { type: String, required: true },
+    email: {
+      type: String,
+      required: true,
+      unique: [true, "Email already exists!"],
+      lowercase: true,
+      trim: true,
+    },
     isEmailVerified: { type: Boolean, required: false },
     phone: { type: String, required: false },
     password: { type: String, required: true },
