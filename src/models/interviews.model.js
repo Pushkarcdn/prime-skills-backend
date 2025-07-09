@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 // Interviews Schema
 const interviewSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     applicationId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Applications",
       required: true,
     },
     date: {
@@ -25,11 +22,12 @@ const interviewSchema = new mongoose.Schema(
     },
     meetingPassword: {
       type: String,
-      required: false,
+      required: true,
     },
     status: {
       type: String,
       required: false,
+      default: "pending",
     },
     messageForApplicant: {
       type: String,

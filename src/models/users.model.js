@@ -5,10 +5,10 @@ import bcrypt from "bcrypt";
 const jobSeekerDetailsSchema = new mongoose.Schema({
   temporaryAddress: { type: String, required: false },
   permanentAddress: { type: String, required: false },
-  job: { type: String, required: false },
-  skills: { type: String, required: false },
+  bio: { type: String, required: false },
+  skills: { type: [String], required: false, default: [] },
   profession: { type: String, required: false },
-  isOpenToWork: { type: Boolean, required: false },
+  isOpenToWork: { type: Boolean, required: false, default: false },
 });
 
 // Recruiter Details Schema
@@ -19,8 +19,8 @@ const recruiterDetailsSchema = new mongoose.Schema({
   companyAddress: { type: String, required: false },
   aboutCompany: { type: String, required: false },
   positionInCompany: { type: String, required: false },
-  isIndividualEmployer: { type: Boolean, required: false },
-  isCurrentlyHiring: { type: Boolean, required: false },
+  isIndividualEmployer: { type: Boolean, required: false, default: false },
+  isCurrentlyHiring: { type: Boolean, required: false, default: false },
 });
 
 const userSchema = new mongoose.Schema(
@@ -37,6 +37,13 @@ const userSchema = new mongoose.Schema(
       unique: [true, "Username already exists!"],
       lowercase: true,
       trim: true,
+      index: true,
+      minlength: [4, "Username must be at least 4 characters long!"],
+      maxlength: [32, "Username must be at most 32 characters long!"],
+      match: [
+        /^[a-zA-Z0-9]+$/,
+        "Username must contain only letters and numbers!",
+      ],
     },
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -47,16 +54,29 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    isEmailVerified: { type: Boolean, required: false },
-    phone: { type: String, required: false },
-    password: { type: String, required: true },
+    isEmailVerified: { type: Boolean, required: false, default: false },
+    phone: {
+      type: String,
+      required: false,
+      unique: [true, "Phone already exists!"],
+    },
+    password: {
+      type: String,
+      required: true,
+      minlength: [8, "Password must be at least 8 characters long!"],
+      maxlength: [32, "Password must be at most 32 characters long!"],
+      match: [
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character!",
+      ],
+    },
     profileImage: { type: String, required: false },
-    dob: { type: String, required: true },
-    gender: { type: String, required: true },
+    dob: { type: String, required: false },
+    gender: { type: String, required: false },
     lastLogin: { type: String, required: false },
     oauthProvider: { type: String, required: false },
     oauthId: { type: String, required: false },
-    ip: { type: String, required: false },
+    ip: { type: String, required: true },
     isTermsAndConditionsAccepted: { type: Boolean, required: true },
     jobSeekerDetails: { type: jobSeekerDetailsSchema, required: false },
     recruiterDetails: { type: recruiterDetailsSchema, required: false },

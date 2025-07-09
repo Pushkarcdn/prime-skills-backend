@@ -3,21 +3,20 @@ import mongoose from "mongoose";
 // Freelance Works Schema
 const freelanceWorkSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     recruiterId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     title: {
       type: String,
       required: true,
+      trim: true,
     },
     slug: {
       type: String,
       required: true,
+      trim: true,
     },
     jobDescription: {
       type: String,
@@ -41,23 +40,26 @@ const freelanceWorkSchema = new mongoose.Schema(
     },
     currency: {
       type: String,
-      required: false,
+      required: true,
     },
     level: {
       type: String,
-      required: false,
+      required: true,
     },
     field: {
       type: String,
-      required: false,
+      required: true,
     },
     vacancy: {
       type: Number,
-      required: false,
+      required: true,
+      default: 1,
+      min: [1, "Vacancy must be at least 1"],
     },
     urgency: {
       type: String,
       required: false,
+      default: "normal",
     },
     deadline: {
       type: String,
@@ -66,6 +68,7 @@ const freelanceWorkSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       required: false,
+      default: true,
     },
   },
   { timestamps: true },

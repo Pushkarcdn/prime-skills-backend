@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 // Jobs Schema
 const jobSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     recruiterId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     title: {
@@ -18,6 +15,8 @@ const jobSchema = new mongoose.Schema(
     slug: {
       type: String,
       required: true,
+      trim: true,
+      unique: true,
     },
     jobDescription: {
       type: String,
@@ -34,10 +33,11 @@ const jobSchema = new mongoose.Schema(
     isSalaryNegotiable: {
       type: Boolean,
       required: false,
+      default: false,
     },
     currency: {
       type: String,
-      required: false,
+      required: true,
     },
     companyBenefits: {
       type: String,
@@ -45,35 +45,39 @@ const jobSchema = new mongoose.Schema(
     },
     timing: {
       type: String,
-      required: false,
+      required: true,
     },
     level: {
       type: String,
-      required: false,
+      required: true,
     },
     industry: {
       type: String,
-      required: false,
+      required: true,
     },
     locationType: {
       type: String,
-      required: false,
+      required: true,
     },
     vacancy: {
       type: Number,
       required: false,
+      default: 1,
+      min: [1, "Vacancy must be at least 1!"],
     },
     urgency: {
       type: String,
       required: false,
+      default: "normal",
     },
     deadline: {
-      type: String,
+      type: Date,
       required: false,
     },
     isActive: {
       type: Boolean,
       required: false,
+      default: true,
     },
   },
   { timestamps: true },

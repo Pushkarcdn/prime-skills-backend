@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 // CVs Schema
 const cvSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
-    jobSeekerId: {
-      type: String,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     title: {

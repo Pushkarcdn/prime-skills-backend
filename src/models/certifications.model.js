@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 // Certifications Schema
 const certificationSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     title: {
@@ -20,11 +17,11 @@ const certificationSchema = new mongoose.Schema(
       required: false,
     },
     startDate: {
-      type: String,
+      type: Date,
       required: true,
     },
     endDate: {
-      type: String,
+      type: Date,
       required: false,
     },
     description: {

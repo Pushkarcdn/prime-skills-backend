@@ -3,25 +3,23 @@ import mongoose from "mongoose";
 // Posts Schema
 const postSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     content: {
       type: String,
       required: true,
     },
-    media: {
-      type: String,
+    medias: {
+      type: [String],
       required: false,
     },
     isActive: {
       type: Boolean,
       required: false,
+      default: true,
     },
   },
   { timestamps: true },

@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 const refreshTokenSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     refreshToken: {
@@ -14,6 +15,7 @@ const refreshTokenSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       required: false,
+      default: true,
     },
     ip: {
       type: String,

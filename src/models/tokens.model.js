@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 const tokenSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     token: {
@@ -14,12 +15,18 @@ const tokenSchema = new mongoose.Schema(
     isUsed: {
       type: Boolean,
       required: false,
+      default: false,
     },
     isActive: {
       type: Boolean,
       required: false,
+      default: true,
     },
     type: {
+      type: String,
+      required: false,
+    },
+    ip: {
       type: String,
       required: false,
     },

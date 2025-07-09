@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 // Projects Schema
 const projectSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     title: {
@@ -24,16 +21,17 @@ const projectSchema = new mongoose.Schema(
       required: false,
     },
     startDate: {
-      type: String,
+      type: Date,
       required: true,
     },
     endDate: {
-      type: String,
+      type: Date,
       required: false,
     },
     isOnGoing: {
       type: Boolean,
       required: false,
+      default: false,
     },
     description: {
       type: String,

@@ -3,20 +3,19 @@ import mongoose from "mongoose";
 // Applications Schema
 const applicationSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     jobId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FreelanceWorks",
       required: true,
     },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     cvId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Cvs",
       required: true,
     },
     coverLetter: {
@@ -30,6 +29,7 @@ const applicationSchema = new mongoose.Schema(
     status: {
       type: String,
       required: false,
+      default: "pending",
     },
   },
   { timestamps: true },

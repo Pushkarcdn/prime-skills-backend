@@ -3,12 +3,9 @@ import mongoose from "mongoose";
 // Experiences Schema
 const experienceSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     designation: {
@@ -20,16 +17,17 @@ const experienceSchema = new mongoose.Schema(
       required: true,
     },
     startDate: {
-      type: String,
+      type: Date,
       required: true,
     },
     endDate: {
-      type: String,
+      type: Date,
       required: false,
     },
     isWorkingCurrently: {
       type: Boolean,
       required: false,
+      default: false,
     },
     description: {
       type: String,

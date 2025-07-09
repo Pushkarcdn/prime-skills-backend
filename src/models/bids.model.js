@@ -3,21 +3,20 @@ import mongoose from "mongoose";
 // Bids Schema
 const bidSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     freelanceWorkId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "FreelanceWorks",
       required: true,
     },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     amount: {
       type: Number,
       required: true,
+      min: [0, "Amount cannot be negative"],
     },
     coverLetter: {
       type: String,
@@ -30,6 +29,7 @@ const bidSchema = new mongoose.Schema(
     status: {
       type: String,
       required: false,
+      default: "pending",
     },
   },
   { timestamps: true },

@@ -3,17 +3,16 @@ import mongoose from "mongoose";
 // Reviews Schema
 const reviewSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     bidId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Bids",
       required: true,
     },
     rating: {
       type: Number,
       required: true,
+      min: [1, "Rating must be at least 1"],
+      max: [5, "Rating must be at most 5"],
     },
     remarks: {
       type: String,
@@ -22,6 +21,7 @@ const reviewSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       required: false,
+      default: true,
     },
   },
   { timestamps: true },

@@ -3,16 +3,14 @@ import mongoose from "mongoose";
 // Comments Likes Schema
 const commentLikeSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     commentId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "PostComments",
       required: true,
     },
     reactionType: {

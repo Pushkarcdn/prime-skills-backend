@@ -3,16 +3,14 @@ import mongoose from "mongoose";
 // Post Likes Schema
 const postLikeSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-    },
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Users",
       required: true,
     },
     postId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Posts",
       required: true,
     },
     reactionType: {
@@ -22,6 +20,7 @@ const postLikeSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       required: false,
+      default: true,
     },
   },
   { timestamps: true },
