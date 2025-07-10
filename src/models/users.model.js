@@ -17,6 +17,7 @@ const recruiterDetailsSchema = new mongoose.Schema({
   companyName: { type: String, required: false },
   companyLogo: { type: String, required: false },
   companyAddress: { type: String, required: false },
+  companyWebsite: { type: String, required: false },
   aboutCompany: { type: String, required: false },
   positionInCompany: { type: String, required: false },
   isIndividualEmployer: { type: Boolean, required: false, default: false },

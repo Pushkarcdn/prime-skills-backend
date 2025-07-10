@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
-import { jwtConfig } from "../../configs/env.js";
+import { jwtConfig } from "../configs/env.config.js";
 import { AuthException } from "../exceptions/index.js";
 
 const signAccessToken = (user) => {
   return new Promise((resolve, reject) => {
     const payload = {
       sub: user.userId,
-      userType: user.userType,
       iat: Date.now(),
     };
 
@@ -32,7 +31,6 @@ const signRefreshToken = (user) => {
   return new Promise((resolve, reject) => {
     const payload = {
       sub: user.userId,
-      userType: user.userType,
       iat: Date.now(),
     };
 
