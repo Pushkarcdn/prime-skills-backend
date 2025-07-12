@@ -9,6 +9,7 @@ const successResponse = (res, result, message, source) => {
   success.status = 200;
   success.message = message;
   success.source = source;
+  success.data = result;
 
   return res.status(200).send(success);
 };

@@ -8,7 +8,7 @@ const currentUser = async (req, res, next) => {
   try {
     if (!req?.user) throw new AuthException("unauthorized", "auth");
 
-    let userData = req?.user?.dataValues;
+    let userData = req?.user;
 
     userData = sanitizePayload(userData, ["password"]);
 

@@ -39,7 +39,7 @@ app.use(setIp); // Set the IP address of the request origin in the request
 // Initializing Passport
 passportJwtConfig(passport);
 
-// app.use(authMiddleware); // Global authentication middleware
+app.use(authMiddleware); // Global authentication middleware
 
 app.use(upload); // Upload middleware
 

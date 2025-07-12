@@ -4,11 +4,11 @@ import path from "path";
 const commonProtectedRoutes = [
   {
     methods: ["GET"],
-    route: "/api/me",
+    route: "/api/auth/me",
   },
   {
     methods: ["POST"],
-    route: "/api/refresh",
+    route: "/api/auth/refresh",
   },
   {
     methods: ["PUT"],
@@ -20,26 +20,22 @@ const commonProtectedRoutes = [
   },
 ];
 
-const isUserAllowed = async (route, method, userType) => {
-  if (userType === "superAdmin") return true;
+const isUserAllowed = async (route, method, role) => {
+  if (role === "superAdmin") return true;
 
-  const permissionsPath = path.resolve(
-    `src/modules/user/${userType}/${userType}.permissions.js`,
-  );
+  const permissionsPath = path.resolve(`src/configs/protected.permissions.js`);
 
-  if (!fs.existsSync(permissionsPath)) {
-    console.error(`Permissions are not specified for user type: ${userType}.`);
+  const allowedRoutes = (await import(permissionsPath))[role + "Permissions"];
+
+  if (!allowedRoutes) {
+    console.error(`Permissions are not specified for ${role}.`);
     return false;
   }
 
-  const allowedRoutes = (await import(permissionsPath))?.default;
-
-  allowedRoutes.push(...commonProtectedRoutes);
-
-  if (!allowedRoutes) return false;
+  const allRoutes = [...allowedRoutes, ...commonProtectedRoutes];
 
   // Check if the route and method match
-  const isMatch = allowedRoutes.some((item) => {
+  const isMatch = allRoutes.some((item) => {
     const normalizedMethods = item.methods.map((method) =>
       method.toUpperCase(),
     );
@@ -58,7 +54,7 @@ const isUserAllowed = async (route, method, userType) => {
 
   if (!isMatch) {
     console.error(
-      `User is not authorized to access this resource. [userType: ${userType}] route: ${route} [${method}]`,
+      `User is not authorized to access this resource. [role: ${role}] route: ${route} [${method}]`,
     );
   }
   return isMatch;
