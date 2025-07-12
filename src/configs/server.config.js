@@ -1,5 +1,5 @@
 import rateLimit from "express-rate-limit";
-import { server } from "./env.config.js";
+import { server, session } from "./env.config.js";
 
 // Rate limiting
 export const limiter = rateLimit({
@@ -10,3 +10,15 @@ export const limiter = rateLimit({
     message: "Too many requests from this IP, Please try again later!",
   },
 });
+
+// session
+export const sessionConfig = {
+  secret: session.secret,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: true,
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+  },
+};

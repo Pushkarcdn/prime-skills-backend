@@ -6,6 +6,7 @@ import morgan from "morgan";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import passport from "passport";
+import session from "express-session";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import httpContext from "express-http-context";
@@ -17,10 +18,11 @@ import { server } from "./src/configs/env.config.js";
 
 import authMiddleware from "./src/middlewares/auth.middleware.js";
 import passportJwtConfig from "./src/passport/jwt.passport.js";
+import passportGoogleConfig from "./src/passport/google.passport.js";
 import errorResponse from "./src/utils/responses/errorResponse.js";
 import { setIp } from "./src/middlewares/ip.middleware.js";
 import { frontend } from "./src/configs/env.config.js";
-import { limiter } from "./src/configs/server.config.js";
+import { limiter, sessionConfig } from "./src/configs/server.config.js";
 
 const app = express();
 const router = express.Router();
@@ -59,8 +61,14 @@ if (
   app.use(morgan("combined", {})); // More detailed logging for production
 }
 
+// Configure express-session middleware
+app.use(session(sessionConfig));
+
 // Initializing Passport
+app.use(passport.initialize());
+app.use(passport.session());
 passportJwtConfig(passport);
+passportGoogleConfig(passport);
 
 app.use(authMiddleware); // Global authentication middleware
 

@@ -1,37 +1,39 @@
-import { AuthException } from "../../exceptions/index.js";
+import { AuthException, HttpException } from "../../exceptions/index.js";
 import successResponse from "../../utils/responses/successResponse.js";
 import { signGeneralToken, verifyGeneralToken } from "../../lib/jwt.js";
 import { backend, frontend } from "../../configs/env.config.js";
 
 import models from "../../models/index.js";
 import sendEmail from "../../utils/mail/nodeMailer.js";
-const { token, Users } = models;
+import { processAuth } from "./signin.controller.js";
+const { Tokens, Users } = models;
 
 const initiateEmailVerification = async (user, ip) => {
   try {
     const verificationToken = await signGeneralToken({
-      userId: user.userId,
+      userId: user._id,
       type: "emailVerification",
-      ip: ip,
+      ip,
     });
 
     // save the token in the database
     const tokenPayload = {
-      userId: user.userId,
+      userId: user._id,
       token: verificationToken,
       type: "emailVerification",
-      ip: ip,
+      ip,
     };
 
-    await token.create(tokenPayload);
+    await Tokens.create(tokenPayload);
 
     // send mail
     const mailData = {
       reciever: user.email,
-      subject: "Verify your email",
+      subject: "Verify your email!",
       templateFile: "emailVerificationMail.ejs",
       variables: {
         name: user.firstName,
+        role: user.role,
         link: `${backend.url}/api/auth/verify-email/${verificationToken}`,
       },
       priority: "normal",
@@ -45,39 +47,35 @@ const initiateEmailVerification = async (user, ip) => {
 
 const resendVerificationEmail = async (req, res, next) => {
   try {
-    const { userType, email } = req.params || {};
+    const { email } = req.params || {};
 
-    if (!userType || !email) {
-      throw new AuthException("invalidRequest", "email verification");
-    }
-
-    const userModel = models?.[userType];
-
-    if (!userModel) {
-      throw new AuthException("invalidUserType", "email verification");
-    }
-
-    const existingUser = await userModel.findOne({
-      where: {
-        email,
-      },
+    const existingUser = await Users.findOne({
+      email,
     });
 
     if (!existingUser) {
-      throw new AuthException("userNotFound", "email verification");
+      throw new HttpException(
+        404,
+        "User with this email not found!",
+        "email verification",
+      );
     }
 
     if (existingUser?.isEmailVerified) {
-      throw new AuthException("emailAlreadyVerified", "email verification");
+      throw new HttpException(
+        400,
+        "Email already verified!",
+        "email verification",
+      );
     }
 
-    await initiateEmailVerification(existingUser, req.ip);
+    initiateEmailVerification(existingUser, req.ip);
 
     return successResponse(
       res,
-      "verification email sent",
-      "send",
-      "verification email",
+      {},
+      "Verification email sent!",
+      "email verification",
     );
   } catch (error) {
     console.error(error);
@@ -85,7 +83,7 @@ const resendVerificationEmail = async (req, res, next) => {
   }
 };
 
-const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res, next) => {
   try {
     const verificationToken = req.params.token;
 
@@ -93,55 +91,30 @@ const verifyEmail = async (req, res) => {
     if (!tokenData)
       return res.redirect(`${frontend.url}/email-verification/failed`);
 
-    const savedToken = await token.findOne({
-      where: {
-        token: verificationToken,
-        type: "emailVerification",
-        isUsed: false,
-        isActive: true,
-      },
-      include: [
-        {
-          model: user,
-          as: "user",
-        },
-      ],
+    const savedToken = await Tokens.findOne({
+      token: verificationToken,
+      type: "emailVerification",
+      isUsed: false,
+      isActive: true,
     });
 
-    if (!savedToken || !savedToken.user) {
+    if (!savedToken) {
       return res.redirect(`${frontend.url}/email-verification/failed`);
     }
 
-    const userModel = models?.[savedToken?.user?.userType];
-
-    if (!userModel) {
-      throw new AuthException("invalidToken", "email verification");
-    }
-
-    // pre set condition and update
-    const condition = {
-      userId: savedToken.user.userId,
-    };
-
-    const payload = {
-      isEmailVerified: true,
-    };
-
-    const updatedUser = await userModel.update(payload, {
-      where: condition,
-      returning: true,
+    const user = await Users.findOne({
+      _id: savedToken.userId,
     });
 
-    if (!updatedUser[1][0]?.isEmailVerified) {
-      throw new AuthException("failedToVerifyEmail", "email verification");
-    }
+    user.isEmailVerified = true;
+    await user.save();
 
     savedToken.isUsed = true;
     savedToken.isActive = false;
 
     await savedToken.save();
 
-    return res.redirect(`${frontend.url}/email-verification/success`);
+    processAuth(req, res, next, user, "redirect");
   } catch (error) {
     console.error(error);
     return res.redirect(`${frontend.url}/email-verification/failed`);

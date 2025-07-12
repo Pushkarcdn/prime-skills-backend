@@ -21,7 +21,7 @@ export default [
   },
   {
     methods: ["GET"],
-    route: "/api/auth/resend-verification-email/:userType/:email",
+    route: "/api/auth/resend-verification-email/:email",
   },
   {
     methods: ["POST"],
@@ -30,5 +30,29 @@ export default [
   {
     methods: ["GET"],
     route: "/api/auth/signout",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/auth/google",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/auth/google/callback",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/auth/linkedin",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/auth/linkedin/callback",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/auth/github",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/auth/github/callback",
   },
 ];

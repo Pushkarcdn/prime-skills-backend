@@ -22,12 +22,12 @@ const signupUser = async (req, res, next) => {
 
     payload.username = payload.email
       .split("@")[0]
-      .replace(/\s+/g, "")
+      .replace(/[^a-zA-Z0-9]/g, "")
       .toLowerCase();
 
     const newUser = await Users.create({ ...payload, ip: req.ip });
 
-    // initiateEmailVerification(newUser, req.ip);
+    initiateEmailVerification(newUser, req.ip);
 
     return successResponse(res, {}, "Signup successful!", "Signup");
   } catch (error) {

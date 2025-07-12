@@ -32,12 +32,9 @@ export default (router) => {
     })(req, res, next);
   });
 
-  router.route("/auth/signin/google/:userType").get((req, res, next) => {
-    const { userType } = req.params;
-
+  router.route("/auth/google").get((req, res, next) => {
     passport.authenticate("google", {
       scope: ["profile", "email"],
-      state: userType,
     })(req, res, next);
   });
 };

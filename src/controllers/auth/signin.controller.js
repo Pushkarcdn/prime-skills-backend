@@ -1,8 +1,7 @@
-import { AuthException, HttpException } from "../../exceptions/index.js";
+import { AuthException } from "../../exceptions/index.js";
 import successResponse from "../../utils/responses/successResponse.js";
 import { frontend } from "../../configs/env.config.js";
 import { signAccessToken, signRefreshToken } from "../../lib/jwt.js";
-import { verifyHashedPassword } from "../../lib/bcrypt.js";
 
 import models from "../../models/index.js";
 
@@ -76,7 +75,7 @@ export const processAuth = async (
 
     if (responseType === "redirect") {
       // Redirect to frontend
-      const redirectUrl = `${frontend.url}/dashboard`;
+      const redirectUrl = `${frontend.url}`;
       return res.redirect(redirectUrl);
     } else {
       return successResponse(res, {}, "Signin successful!", "auth");
