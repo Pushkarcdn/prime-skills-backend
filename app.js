@@ -36,13 +36,6 @@ app.use(cookieParser()); // Parse cookies from HTTP requests
 app.use(httpContext.middleware); // Attach request-scoped data (context)
 app.use(setIp); // Set the IP address of the request origin in the request
 
-// Initializing Passport
-passportJwtConfig(passport);
-
-app.use(authMiddleware); // Global authentication middleware
-
-app.use(upload); // Upload middleware
-
 if (
   process.env.NODE_ENV === "local" ||
   process.env.NODE_ENV === "development"
@@ -51,7 +44,7 @@ if (
     cors({
       origin: true,
       credentials: true,
-      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     }),
   );
   app.use(morgan("dev", {})); // Dev logging format
@@ -60,11 +53,18 @@ if (
     cors({
       origin: frontend.url,
       credentials: true,
-      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     }),
   );
   app.use(morgan("combined", {})); // More detailed logging for production
 }
+
+// Initializing Passport
+passportJwtConfig(passport);
+
+app.use(authMiddleware); // Global authentication middleware
+
+app.use(upload); // Upload middleware
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

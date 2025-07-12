@@ -4,7 +4,7 @@ import successResponse from "../../utils/responses/successResponse.js";
 import models from "../../models/index.js";
 import { extractAccessToken } from "../../passport/jwt.passport.js";
 
-const { accessToken } = models;
+const { AccessTokens } = models;
 
 const signOutUser = async (req, res, next) => {
   try {
@@ -13,14 +13,10 @@ const signOutUser = async (req, res, next) => {
     if (!accessTokenFromCookie)
       throw new AuthException("Signed out already!", "signout");
 
-    await accessToken.update(
+    await AccessTokens.findOneAndUpdate(
+      { accessToken: accessTokenFromCookie },
       {
         isActive: false,
-      },
-      {
-        where: {
-          accessToken: accessTokenFromCookie,
-        },
       },
     );
 
