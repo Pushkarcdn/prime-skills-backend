@@ -55,4 +55,20 @@ export default [
     methods: ["GET"],
     route: "/api/auth/github/callback",
   },
+  {
+    methods: ["GET"],
+    route: "/api/jobs",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/jobs/:slug",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/freelance-works",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/freelance-works/:slug",
+  },
 ];
