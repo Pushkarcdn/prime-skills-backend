@@ -14,16 +14,29 @@ const signupUser = async (req, res, next) => {
       throw new HttpException(400, "Invalid role!", "auth");
     }
 
-    const existingUser = await Users.findOne({
-      where: { email: payload.email },
+    let existingUser = await Users.findOne({
+      email: payload.email,
     });
 
-    if (existingUser) throw new ConflictException("duplicateData", "user");
+    if (existingUser)
+      throw new ConflictException(
+        "User with this email already exists!",
+        "user",
+      );
 
-    payload.username = payload.email
-      .split("@")[0]
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .toLowerCase();
+    payload.username =
+      payload?.username ||
+      payload.email
+        .split("@")[0]
+        .replace(/[^a-zA-Z0-9]/g, "")
+        .toLowerCase();
+
+    existingUser = await Users.findOne({
+      username: payload.username,
+    });
+
+    if (existingUser)
+      throw new ConflictException("Username not available!", "user");
 
     const newUser = await Users.create({ ...payload, ip: req.ip });
 

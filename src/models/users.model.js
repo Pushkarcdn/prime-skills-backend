@@ -3,8 +3,6 @@ import bcrypt from "bcrypt";
 
 // Job Seeker Details Schema
 const jobSeekerDetailsSchema = new mongoose.Schema({
-  temporaryAddress: { type: String, required: false },
-  permanentAddress: { type: String, required: false },
   bio: { type: String, required: false },
   skills: { type: [String], required: false, default: [] },
   profession: { type: String, required: false },
@@ -13,14 +11,12 @@ const jobSeekerDetailsSchema = new mongoose.Schema({
 
 // Recruiter Details Schema
 const recruiterDetailsSchema = new mongoose.Schema({
-  personalAddress: { type: String, required: false },
   companyName: { type: String, required: false },
   companyLogo: { type: String, required: false },
   companyAddress: { type: String, required: false },
   companyWebsite: { type: String, required: false },
   aboutCompany: { type: String, required: false },
   positionInCompany: { type: String, required: false },
-  isIndividualEmployer: { type: Boolean, required: false, default: false },
   isCurrentlyHiring: { type: Boolean, required: false, default: false },
 });
 
@@ -35,7 +31,7 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
-      unique: [true, "Username already exists!"],
+      unique: [true, "Username not available!"],
       lowercase: true,
       trim: true,
       index: true,
@@ -68,6 +64,8 @@ const userSchema = new mongoose.Schema(
     profileImage: { type: String, required: false },
     dob: { type: String, required: false },
     gender: { type: String, required: false },
+    temporaryAddress: { type: String, required: false },
+    permanentAddress: { type: String, required: false },
     lastLogin: { type: String, required: false },
     oAuthProvider: { type: String, required: false },
     oAuthId: { type: String, required: false },

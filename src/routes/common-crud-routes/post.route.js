@@ -23,6 +23,21 @@ export default (router) => {
 
         const payload = { ...req.body, ip: req.ip };
 
+        // Automatically parse any JSON string fields in the payload
+        Object.keys(payload).forEach((key) => {
+          if (typeof payload[key] === "string") {
+            try {
+              const parsedValue = JSON.parse(payload[key]);
+              // Check if the parsed value is actually an object or array
+              if (typeof parsedValue === "object" && parsedValue !== null) {
+                payload[key] = parsedValue;
+              }
+            } catch (e) {
+              // Not valid JSON, keep as string
+            }
+          }
+        });
+
         const data = await model.create(payload);
 
         return successResponse(

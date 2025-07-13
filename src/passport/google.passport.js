@@ -41,13 +41,10 @@ export default (passport) => {
           user = await Users.findOne({ oAuthId: id });
 
           if (!user) {
-            console.log("User not found, checking email");
             user = await Users.findOne({ email: profile.emails[0].value });
           }
 
           if (user?._id && !user.oAuthId) {
-            console.log("User found, updating user");
-
             user.oAuthId = id;
             user.oAuthProvider = "google";
             user.isEmailVerified = true;
@@ -55,7 +52,6 @@ export default (passport) => {
           }
 
           if (!user) {
-            console.log("Creating new user");
             user = await Users.create({
               oAuthId: id,
               oAuthProvider: "google",

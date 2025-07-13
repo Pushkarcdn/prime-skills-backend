@@ -30,7 +30,13 @@ const router = express.Router();
 app.set("trust proxy", server.noOfProxies); // Trusting the Proxy (Cloudflare or Load Balancer)
 app.set("view engine", "ejs"); // EJS as templating engine for rendering views
 app.use(hpp()); // Against HTTP parameter pollution
-app.use(helmet()); // Add security-related HTTP headers
+// Configure helmet with appropriate CSP settings
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Disable CSP for static files
+    crossOriginResourcePolicy: { policy: "cross-origin" }, // Allow cross-origin resource sharing
+  }),
+);
 app.use(express.json({ limit: server.bodySizeLimit })); // Parse incoming JSON requests
 app.use(express.urlencoded({ extended: true, limit: server.bodySizeLimit })); // Parse URL-encoded data
 app.use(compression()); // Enable response compression for faster API responses

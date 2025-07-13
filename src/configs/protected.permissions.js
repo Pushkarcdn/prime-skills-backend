@@ -9,7 +9,7 @@ export const jobSeekerPermissions = [
   },
 ];
 
-export const employerPermissions = [
+export const recruiterPermissions = [
   {
     methods: ["GET", "POST"],
     route: "/api/jobs",
