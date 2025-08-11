@@ -1,13 +1,12 @@
 {
-  "name": "linkedin-clone",
+  "name": "prime-skills-backend",
   "type": "module",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Prime Skills Backend",
   "license": "ISC",
-  "author": "",
+  "author": "Pushkar Kumar Sah | www.pushkar.live",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev:local": "cross-env NODE_ENV=local nodemon index.js",
     "dev:server": "cross-env NODE_ENV=development node index.js",
     "start": "cross-env NODE_ENV=production node index.js"

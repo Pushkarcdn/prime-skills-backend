@@ -2,7 +2,7 @@ name: Prime Skills Backend Deployment
 
 on:
   push:
-    branches: [main]
+    branches: [production]
 
 env:
   PROJECT_NAME: prime-skills-backend

@@ -67,8 +67,6 @@ export const emails = {
 
 // Super Admin Configuration
 export const superAdmin = {
-  firstName: process.env.SUPER_ADMIN_NAME.split(" ")[0] || "Super",
-  lastName: process.env.SUPER_ADMIN_NAME.split(" ")[1] || "Admin",
   email: process.env.SUPER_ADMIN_EMAIL,
   password: process.env.SUPER_ADMIN_PASSWORD,
 };

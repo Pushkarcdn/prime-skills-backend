@@ -1,28 +1,27 @@
 import successResponse from "../../utils/responses/successResponse.js";
-import { frontend } from "../../configs/env.config.js";
+import { superAdmin } from "../../configs/env.config.js";
 import models from "../../models/index.js";
 
 const { Users } = models;
 
 const resetSuperAdmin = async (req, res, next) => {
   try {
-    await user.destroy({ where: { userType: ["admin", "superAdmin"] } });
-
-    const newUser = await user.create({ userType: "superAdmin" });
+    await Users.deleteMany({ role: ["admin", "superAdmin"] });
 
     const superAdminPayload = {
-      userId: newUser.userId,
+      role: "superAdmin",
+      username: "superAdmin",
       firstName: "Super",
       lastName: "Admin",
-      email: "superadmin@example.com",
-      phone: "+919876543210",
-      password: "$2a$15$uWvTy8eVz.gPFKC5T15dre263j1xN7Dvmvx8SdpsCOEubHmQuv0AC",
-      profileImage: `${frontend.url}/favicon.ico`,
-      address: "Rajasthan, India",
+      email: superAdmin.email,
+      password: superAdmin.password,
+      isEmailVerified: true,
+      profileImage: `https://primeskills.pushkar.live/logo.png`,
       ip: req.ip,
+      isTermsAndConditionsAccepted: true,
     };
 
-    await admin.create(superAdminPayload);
+    await Users.create(superAdminPayload);
 
     return successResponse(res, "Success!", "update", "settings");
   } catch (error) {
