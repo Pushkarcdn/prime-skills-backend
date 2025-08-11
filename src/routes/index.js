@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import { pathToFileURL } from "url";
 
 export default async (router) => {
   const routeDirectories = ["src/routes"];
@@ -34,7 +35,9 @@ export default async (router) => {
       await Promise.all(
         routes.map(async (filePath) => {
           try {
-            const module = await import(filePath);
+            // Convert Windows path to file:// URL for ESM imports
+            const fileUrl = pathToFileURL(filePath).href;
+            const module = await import(fileUrl);
             if (typeof module.default === "function") {
               module.default(router);
             } else {

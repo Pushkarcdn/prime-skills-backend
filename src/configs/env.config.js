@@ -80,12 +80,6 @@ export const zoom = {
   clientSecret: process.env.ZOOM_CLIENT_SECRET,
 };
 
-// whatsapp
-export const whatsapp = {
-  apiUrl: process.env.WHATSAPP_API_URL,
-  apiKey: process.env.WHATSAPP_API_KEY,
-};
-
 // OAuth Configuration
 export const oauth = {
   google: {

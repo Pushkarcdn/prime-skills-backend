@@ -1,0 +1,10 @@
+services:
+  app:
+    image: prime-skills-backend:latest
+    container_name: prime-skills-backend
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./.env.production:/app/.env.production:ro
