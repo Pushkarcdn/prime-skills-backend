@@ -41,22 +41,6 @@ export default [
   },
   {
     methods: ["GET"],
-    route: "/api/auth/linkedin",
-  },
-  {
-    methods: ["GET"],
-    route: "/api/auth/linkedin/callback",
-  },
-  {
-    methods: ["GET"],
-    route: "/api/auth/github",
-  },
-  {
-    methods: ["GET"],
-    route: "/api/auth/github/callback",
-  },
-  {
-    methods: ["GET"],
     route: "/api/jobs",
   },
   {
