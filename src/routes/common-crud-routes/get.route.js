@@ -1,6 +1,8 @@
 import models from "../../models/index.js";
 import successResponse from "../../utils/responses/successResponse.js";
 import { NotFoundException } from "../../exceptions/index.js";
+import { sanitizePayload } from "../../utils/filters/payloadFilter.js";
+import { isValidObjectId } from "mongoose";
 
 export default (router) => {
   const collections = Object.keys(models);
@@ -21,7 +23,9 @@ export default (router) => {
           );
         }
 
-        const data = await model.find();
+        let data = await model.find().lean();
+
+        data = await sanitizePayload(data, ["password", "__v"]);
 
         return successResponse(
           res,
@@ -34,36 +38,46 @@ export default (router) => {
       }
     });
 
-    router.get(`/${dashedCollectionNames}/:id`, async (req, res, next) => {
-      try {
-        const model = models?.[collection];
+    router.get(
+      `/${dashedCollectionNames}/:identifier`,
+      async (req, res, next) => {
+        try {
+          const model = models?.[collection];
 
-        if (!model) {
-          throw new NotFoundException(
-            `Collection ${dashedCollectionNames} not found!`,
-            dashedCollectionNames,
+          if (!model) {
+            throw new NotFoundException(
+              `Collection ${dashedCollectionNames} not found!`,
+              dashedCollectionNames,
+            );
+          }
+
+          let data;
+
+          // if identifier is a valid ObjectId
+          if (isValidObjectId(req.params.identifier)) {
+            data = await model.findOne({ _id: req.params.identifier });
+          } else {
+            data = await model.findOne({ slug: req.params.identifier });
+          }
+
+          if (!data) {
+            throw new NotFoundException(
+              `Item not found!`,
+              dashedCollectionNames,
+              req.params.id,
+            );
+          }
+
+          return successResponse(
+            res,
+            data,
+            `${collection} fetched successfully!`,
+            collection,
           );
+        } catch (error) {
+          next(error);
         }
-
-        const data = await model.findById(req.params.id);
-
-        if (!data) {
-          throw new NotFoundException(
-            `Item not found!`,
-            dashedCollectionNames,
-            req.params.id,
-          );
-        }
-
-        return successResponse(
-          res,
-          data,
-          `${collection} fetched successfully!`,
-          collection,
-        );
-      } catch (error) {
-        next(error);
-      }
-    });
+      },
+    );
   });
 };

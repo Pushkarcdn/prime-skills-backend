@@ -3,6 +3,10 @@ import { HttpException } from "../../exceptions/index.js";
 export const sanitizePayload = (payload, itemsToDelete) => {
   if (!payload || !itemsToDelete) return payload;
 
+  if (Array.isArray(payload)) {
+    return payload.map((item) => sanitizePayload(item, itemsToDelete));
+  }
+
   const filteredPayload = {};
 
   Object.keys(payload).forEach((key) => {
