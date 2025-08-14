@@ -33,7 +33,7 @@ const sendEmail = (data) => {
         ...data.variables,
         appName: server.appName,
         appUrl: frontend.url.replace("http://", "").replace("https://", ""),
-        appLogo: `${frontend.url}/favicon.ico`,
+        appLogo: `${frontend.url}/logo.png`,
       };
 
       // EJS template setup

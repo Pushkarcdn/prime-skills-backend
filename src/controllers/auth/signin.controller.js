@@ -13,11 +13,17 @@ const signInUser = async (req, res, next) => {
 
     const existingUser = await Users.findOne({ email });
 
-    if (!existingUser) throw new AuthException("Invalid credentials!", "auth1");
+    if (!existingUser) throw new AuthException("Invalid credentials!", "auth");
 
     const isMatch = await existingUser.comparePassword(password);
 
-    if (!isMatch) throw new AuthException("Invalid credentials!", "auth2");
+    if (!isMatch) throw new AuthException("Invalid credentials!", "auth");
+
+    if (!existingUser.isEmailVerified)
+      throw new AuthException(
+        "Please verify your email following the link sent to your email and try again!",
+        "auth",
+      );
 
     processAuth(req, res, next, existingUser, "response");
   } catch (error) {
@@ -78,7 +84,12 @@ export const processAuth = async (
       const redirectUrl = `${frontend.url}`;
       return res.redirect(redirectUrl);
     } else {
-      return successResponse(res, {}, "Signin successful!", "auth");
+      return successResponse(
+        res,
+        { role: user?.role },
+        "Signin successful!",
+        "auth",
+      );
     }
   } catch (error) {
     next(error);

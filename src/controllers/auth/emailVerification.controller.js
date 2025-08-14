@@ -89,7 +89,7 @@ const verifyEmail = async (req, res, next) => {
 
     const tokenData = await verifyGeneralToken(verificationToken);
     if (!tokenData)
-      return res.redirect(`${frontend.url}/email-verification/failed`);
+      return res.redirect(`${frontend.url}/auth/email-verification/failed`);
 
     const savedToken = await Tokens.findOne({
       token: verificationToken,
@@ -99,7 +99,7 @@ const verifyEmail = async (req, res, next) => {
     });
 
     if (!savedToken) {
-      return res.redirect(`${frontend.url}/email-verification/failed`);
+      return res.redirect(`${frontend.url}/auth/email-verification/failed`);
     }
 
     const user = await Users.findOne({
@@ -117,7 +117,7 @@ const verifyEmail = async (req, res, next) => {
     processAuth(req, res, next, user, "redirect");
   } catch (error) {
     console.error(error);
-    return res.redirect(`${frontend.url}/email-verification/failed`);
+    return res.redirect(`${frontend.url}/auth/email-verification/failed`);
   }
 };
 
