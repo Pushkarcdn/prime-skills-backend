@@ -23,7 +23,33 @@ export default (router) => {
           );
         }
 
-        let data = await model.find().lean();
+        // Get all schema paths that reference other models
+        const schema = model.schema;
+        const populateFields = [];
+
+        schema.eachPath((pathname, schematype) => {
+          if (schematype.options && schematype.options.ref) {
+            populateFields.push(pathname);
+          }
+          // Handle arrays of references
+          if (schematype.schema && schematype.schema.paths) {
+            Object.keys(schematype.schema.paths).forEach((subPath) => {
+              const subSchemaType = schematype.schema.paths[subPath];
+              if (subSchemaType.options && subSchemaType.options.ref) {
+                populateFields.push(`${pathname}.${subPath}`);
+              }
+            });
+          }
+        });
+
+        let query = model.find();
+
+        // Populate all reference fields
+        populateFields.forEach((field) => {
+          query = query.populate(field);
+        });
+
+        let data = await query.lean();
 
         data = await sanitizePayload(data, ["password", "__v"]);
 

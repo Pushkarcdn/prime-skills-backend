@@ -55,7 +55,10 @@ export default (passport) => {
             user = await Users.create({
               oAuthId: id,
               oAuthProvider: "google",
-              username: profile.emails[0]?.value?.split("@")[0]?.toLowerCase(),
+              username: profile.emails[0]?.value
+                ?.split("@")[0]
+                ?.toLowerCase()
+                .replace(/[^a-z0-9]/g, ""),
               email: profile.emails[0].value,
               isEmailVerified: true,
               firstName: profile.name.givenName || "User",

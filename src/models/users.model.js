@@ -39,7 +39,7 @@ const userSchema = new mongoose.Schema(
       maxlength: [32, "Username must be at most 32 characters long!"],
       match: [
         /^[a-zA-Z0-9]+$/,
-        "Username must contain only letters and numbers!",
+        "Username must contain only letters and numbers.",
       ],
     },
     firstName: { type: String, required: true },
@@ -55,7 +55,6 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: false,
-      unique: [true, "Phone number already used!"],
     },
     password: {
       type: String,
@@ -79,17 +78,30 @@ const userSchema = new mongoose.Schema(
 
 // Pre-save middleware to hash password
 userSchema.pre("save", async function (next) {
-  // Only hash the password if it has been modified (or is new)
-  if (!this.isModified("password")) return next();
-
-  try {
-    // Hash password with cost of 12
-    const saltRounds = 12;
-    this.password = await bcrypt.hash(this.password, saltRounds);
-    next();
-  } catch (error) {
-    next(error);
+  if (this.isModified("username")) {
+    try {
+      // Remove all non-alphanumeric characters and convert to lowercase
+      const filteredUsername = this.username
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+      this.username = filteredUsername;
+    } catch (error) {
+      next(error);
+    }
   }
+
+  // Only hash the password if it has been modified (or is new)
+  if (this.isModified("password")) {
+    try {
+      // Hash password with cost of 12
+      const saltRounds = 12;
+      this.password = await bcrypt.hash(this.password, saltRounds);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  next();
 });
 
 // Method to compare password
