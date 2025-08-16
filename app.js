@@ -12,6 +12,7 @@ import { dirname, join } from "path";
 import httpContext from "express-http-context";
 
 import { connectDB } from "./src/configs/database.config.js";
+import { redisClient } from "./src/lib/redis.js";
 import routes from "./src/routes/index.js";
 import upload from "./src/lib/multer.js";
 import { server } from "./src/configs/env.config.js";
@@ -27,7 +28,7 @@ import { limiter, sessionConfig } from "./src/configs/server.config.js";
 const app = express();
 const router = express.Router();
 
-app.set("trust proxy", server.noOfProxies); // Trusting the Proxy (Cloudflare or Load Balancer)
+app.set("trust proxy", true); // Trusting the Proxy (Cloudflare or Load Balancer)
 app.set("view engine", "ejs"); // EJS as templating engine for rendering views
 app.use(hpp()); // Against HTTP parameter pollution
 // Configure helmet with appropriate CSP settings
@@ -70,6 +71,13 @@ if (
 // Configure express-session middleware
 app.use(session(sessionConfig));
 
+connectDB();
+
+app.use(async (req, res, next) => {
+  req.redis = redisClient;
+  next();
+});
+
 // Initializing Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -83,8 +91,6 @@ app.use(upload); // Upload middleware
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 app.use(express.static(join(__dirname, "./public"))); // Serve static frontend files
-
-connectDB();
 
 // Home GET route
 app.get("/", (req, res, next) => {

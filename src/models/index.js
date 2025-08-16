@@ -34,7 +34,7 @@ for (const file of modelFiles) {
   models[exportName] = module.default;
 }
 
-console.info("Models loaded: ", models);
+console.info("Models loaded: ", Object.keys(models));
 
 // Also export the entire models object for convenience
 export default models;

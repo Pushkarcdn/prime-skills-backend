@@ -2,6 +2,8 @@ import { AuthException } from "../../exceptions/index.js";
 import successResponse from "../../utils/responses/successResponse.js";
 import { frontend } from "../../configs/env.config.js";
 import { signAccessToken, signRefreshToken } from "../../lib/jwt.js";
+import { jwtConfig } from "../../configs/env.config.js";
+import { convertJwtTimeToSeconds } from "../../utils/helpers/timeFormatters.js";
 
 import models from "../../models/index.js";
 
@@ -59,8 +61,26 @@ export const processAuth = async (
       ip: req?.ip,
     };
 
-    await AccessTokens.create(accessTokenPayload);
     await RefreshTokens.create(refreshTokenPayload);
+    await AccessTokens.create(accessTokenPayload);
+
+    const accessTokenExpiry = jwtConfig.accessTokenExpiresIn;
+
+    const accessTokenExpiryInSeconds =
+      convertJwtTimeToSeconds(accessTokenExpiry);
+
+    // remove old access tokens of this user that are expired
+    await req.redis.zRemRangeByScore(
+      `accessToken:${user?._id}`,
+      0,
+      Date.now() - accessTokenExpiryInSeconds * 1000,
+    );
+
+    // add new access token to redis
+    await req.redis.zAdd(`accessToken:${user?._id}`, {
+      value: newAccessToken,
+      score: Date.now() + accessTokenExpiryInSeconds * 1000,
+    });
 
     // Update last login time
     Users.updateOne({ _id: user?._id }, { lastLogin: new Date() }).catch(
@@ -70,13 +90,13 @@ export const processAuth = async (
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "lax",
     });
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "lax",
     });
 
     if (responseType === "redirect") {

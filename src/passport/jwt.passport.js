@@ -38,25 +38,22 @@ const jwtPassportConfig = (passport) => {
        */
       async (req, jwt_payload, done) => {
         try {
-          const { sub } = jwt_payload;
-
           extractedAccessToken = extractAccessToken(req);
 
           if (!extractedAccessToken) return done(null, false);
 
+          const expiry = await req.redis.zScore(
+            `accessToken:${jwt_payload.sub}`,
+            extractedAccessToken,
+          );
+
+          if (!expiry || expiry < Date.now()) return done(null, false);
+
           const user = await Users?.findOne({
-            _id: sub,
+            _id: jwt_payload.sub,
           }).lean();
 
           if (!user) return done(null, false);
-
-          // Fetch the access token information
-          const accessTokenRecord = await AccessTokens?.findOne({
-            accessToken: extractedAccessToken,
-            isActive: true,
-          });
-
-          if (!accessTokenRecord) return done(null, false);
 
           // Check if the user is allowed to access the resource
           const route = req.originalUrl;
