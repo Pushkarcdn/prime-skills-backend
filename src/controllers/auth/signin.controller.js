@@ -65,9 +65,12 @@ export const processAuth = async (
     await AccessTokens.create(accessTokenPayload);
 
     const accessTokenExpiry = jwtConfig.accessTokenExpiresIn;
+    const refreshTokenExpiry = jwtConfig.refreshTokenExpiresIn;
 
     const accessTokenExpiryInSeconds =
       convertJwtTimeToSeconds(accessTokenExpiry);
+    const refreshTokenExpiryInSeconds =
+      convertJwtTimeToSeconds(refreshTokenExpiry);
 
     // remove old access tokens of this user that are expired
     await req.redis.zRemRangeByScore(
@@ -91,6 +94,8 @@ export const processAuth = async (
       httpOnly: true,
       secure: true,
       sameSite: "lax",
+      path: "/",
+      priority: "high",
       maxAge: accessTokenExpiryInSeconds * 1000,
     });
 
@@ -98,7 +103,9 @@ export const processAuth = async (
       httpOnly: true,
       secure: true,
       sameSite: "lax",
-      maxAge: accessTokenExpiryInSeconds * 1000,
+      path: "/api/auth/refresh",
+      priority: "high",
+      maxAge: refreshTokenExpiryInSeconds * 1000,
     });
 
     if (responseType === "redirect") {

@@ -1,4 +1,12 @@
+const byPassAuthRoutes = [
+  {
+    methods: ["GET"],
+    route: "/api/auth/refresh",
+  },
+];
+
 export default [
+  ...byPassAuthRoutes,
   {
     methods: ["GET"],
     route: "/",

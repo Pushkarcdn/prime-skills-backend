@@ -12,6 +12,11 @@ const refreshTokenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    timesUsed: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
     isActive: {
       type: Boolean,
       required: false,

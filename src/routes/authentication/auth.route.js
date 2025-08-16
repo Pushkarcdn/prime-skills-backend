@@ -11,7 +11,7 @@ export default (router) => {
 
   router.route("/auth/signin").post(SigninController.signInUser);
 
-  router.route("/auth/refresh").post(RefreshController.refreshUserToken);
+  router.route("/auth/refresh").get(RefreshController.refreshUserToken);
 
   router.route("/auth/signout").get(SignoutController.signOutUser);
 

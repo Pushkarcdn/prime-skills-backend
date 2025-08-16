@@ -1,5 +1,5 @@
 import successResponse from "../../utils/responses/successResponse.js";
-import { AuthException } from "../../exceptions/index.js";
+import { AuthException, NotFoundException } from "../../exceptions/index.js";
 import { extractRefreshToken } from "../../passport/jwt.passport.js";
 
 import models from "../../models/index.js";
@@ -13,23 +13,28 @@ const refreshUserToken = async (req, res, next) => {
   try {
     const extractedRefreshToken = extractRefreshToken(req);
 
+    if (!extractedRefreshToken)
+      throw new NotFoundException("No refresh token found!", "auth");
+
     const refreshTokenPayload = await verifyRefreshToken(extractedRefreshToken);
 
     if (!refreshTokenPayload?.sub)
       throw new AuthException("invalidRefreshToken", "auth");
 
     const existingRefreshToken = await RefreshTokens.findOne({
-      where: { refreshToken: extractedRefreshToken, isActive: true },
+      refreshToken: extractedRefreshToken,
+      isActive: true,
     }).lean();
 
     if (
       !existingRefreshToken ||
-      existingRefreshToken._id !== refreshTokenPayload?.sub
+      existingRefreshToken?.userId?.toString() !==
+        refreshTokenPayload?.sub?.toString()
     )
       throw new AuthException("invalidRefreshToken", "auth");
 
     const existingUser = await Users.findOne({
-      _id: existingRefreshToken._id,
+      _id: existingRefreshToken?.userId,
     }).lean();
 
     if (!existingUser) throw new AuthException("invalidRefreshToken", "auth");
@@ -70,13 +75,19 @@ const refreshUserToken = async (req, res, next) => {
       { lastLogin: new Date() },
     ).catch((err) => console.error("Error updating last login: ", err));
 
-    existingRefreshToken.timesUsed = existingRefreshToken.timesUsed + 1;
-    await existingRefreshToken.save();
+    await RefreshTokens.updateOne(
+      {
+        _id: existingRefreshToken?._id,
+      },
+      { timesUsed: (Number(existingRefreshToken?.timesUsed) || 0) + 1 },
+    );
 
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
+      path: "/",
+      priority: "high",
       maxAge: accessTokenExpiryInSeconds * 1000,
     });
 

@@ -38,6 +38,8 @@ const signOutUser = async (req, res, next) => {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
+      path: "/",
+      priority: "high",
       maxAge: 0,
     });
 
@@ -45,6 +47,8 @@ const signOutUser = async (req, res, next) => {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
+      path: "/api/auth/refresh",
+      priority: "high",
       maxAge: 0,
     });
 
