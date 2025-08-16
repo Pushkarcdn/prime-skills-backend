@@ -91,12 +91,14 @@ export const processAuth = async (
       httpOnly: true,
       secure: true,
       sameSite: "lax",
+      maxAge: accessTokenExpiryInSeconds * 1000,
     });
 
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: "lax",
+      maxAge: accessTokenExpiryInSeconds * 1000,
     });
 
     if (responseType === "redirect") {

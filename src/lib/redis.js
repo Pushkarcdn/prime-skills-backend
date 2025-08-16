@@ -21,6 +21,6 @@ redisClient.on("connect", () => {
 });
 
 // connecting to Redis
-await redisClient.connect();
+redisClient.connect();
 
 export { redisClient };
