@@ -7,12 +7,12 @@ export default (router) => {
     passport.authenticate("google", { session: true }, (err, user) => {
       if (err) {
         console.error("Google oauth error:", err);
-        return res.redirect("/failed");
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/sign-in`);
       }
 
       if (!user) {
         console.error("No user found!");
-        return res.redirect("/failed");
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/sign-in`);
       }
 
       try {
@@ -20,14 +20,14 @@ export default (router) => {
         req.login(user, async (loginErr) => {
           if (loginErr) {
             console.error("Google oauth login error: ", loginErr);
-            return res.redirect("/failed");
+            return res.redirect(`${process.env.FRONTEND_URL}/auth/sign-in`);
           }
 
           processAuth(req, res, next, user, "redirect");
         });
       } catch (error) {
         console.error("Error in Google oauth callback:", error);
-        return res.redirect("/failed");
+        return res.redirect(`${process.env.FRONTEND_URL}/auth/sign-in`);
       }
     })(req, res, next);
   });
