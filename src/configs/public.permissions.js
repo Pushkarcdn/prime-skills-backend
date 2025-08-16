@@ -29,10 +29,6 @@ export default [
   },
   {
     methods: ["GET"],
-    route: "/api/auth/signout",
-  },
-  {
-    methods: ["GET"],
     route: "/api/auth/google",
   },
   {

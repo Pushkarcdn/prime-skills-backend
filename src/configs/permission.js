@@ -10,6 +10,10 @@ const commonProtectedRoutes = [
     route: "/api/auth/refresh",
   },
   {
+    methods: ["GET"],
+    route: "/api/auth/signout",
+  },
+  {
     methods: ["PUT"],
     route: "/api/update-my-profile",
   },
