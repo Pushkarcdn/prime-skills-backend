@@ -35,7 +35,6 @@ const getProfessionals = async () => {
 };
 
 const getProfessionalsByQuery = async (query) => {
-  console.log(query);
   return await Users.find({
     $or: [
       { firstName: { $regex: query, $options: "i" } },
