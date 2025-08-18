@@ -17,6 +17,14 @@ const commonProtectedRoutes = [
     methods: ["PUT"],
     route: "/api/change-my-password",
   },
+  {
+    methods: ["GET"],
+    route: "/api/professionals?:query",
+  },
+  {
+    methods: ["GET"],
+    route: "/api/jobs?:query",
+  },
 ];
 
 const isUserAllowed = async (route, method, role) => {

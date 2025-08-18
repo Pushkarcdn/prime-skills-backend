@@ -30,6 +30,31 @@ const deleteUserById = async (id) => {
   return await Users.findByIdAndDelete(id);
 };
 
+const getProfessionals = async () => {
+  return await Users.find({ role: "jobSeeker" });
+};
+
+const getProfessionalsByQuery = async (query) => {
+  console.log(query);
+  return await Users.find({
+    $or: [
+      { firstName: { $regex: query, $options: "i" } },
+      { lastName: { $regex: query, $options: "i" } },
+      { username: { $regex: query, $options: "i" } },
+      { email: { $regex: query, $options: "i" } },
+      {
+        $expr: {
+          $regexMatch: {
+            input: { $concat: ["$firstName", " ", "$lastName"] },
+            regex: query,
+            options: "i",
+          },
+        },
+      },
+    ],
+  });
+};
+
 export default {
   createUser,
   findUserById,
@@ -38,4 +63,6 @@ export default {
   findUserByFieldName,
   updateUserById,
   deleteUserById,
+  getProfessionals,
+  getProfessionalsByQuery,
 };
